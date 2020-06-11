@@ -61,9 +61,25 @@ rayoLaser :: Elemento
 rayoLaser = UnElemento "Tecnologia Avanzada" (modificarSalud (+ (-20))) (modificarSalud (+0))
 
 jack :: Personaje
-jack = UnPersonaje "Samurai Jack" 300 [concentracion 3, katanaMagica] 200
+jack = UnPersonaje "Samurai Jack" 1000 [concentracion 3, katanaMagica] 200
 aku :: Number -> Number -> Personaje
-aku anio salud = UnPersonaje "Aku" salud (concentracion 4 : portalAlFuturo anio : esbirrosMalvados (anio*100)) anio
+aku anio salud = UnPersonaje "Aku" salud (concentracion 4 : portalAlFuturo anio : esbirrosMalvados (anio*1)) anio
 
 portalAlFuturo :: Number -> Elemento
 portalAlFuturo anio = UnElemento "Magia" (mandarAlAnio (anio + 2800)) (mandarAlAnio (anio + 2800))
+
+atacar :: Personaje -> Personaje -> Personaje
+atacar atacado atacante = foldl (\atacado elemento -> (ataque elemento) atacado) atacado (elementos atacante)
+
+defender :: Personaje -> Personaje 
+defender atacado = foldl (\atacado elemento -> (defensa elemento) atacado) atacado (elementos atacado)
+
+estaMuerto :: Personaje -> Bool
+estaMuerto (UnPersonaje _ 0 _ _) = True
+estaMuerto _ = False
+
+luchar :: Personaje -> Personaje -> (Personaje, Personaje) 
+luchar atacante defensor
+                         | (estaMuerto.atacar defensor) atacante = (atacante,defensor)
+                         | otherwise = luchar (atacar defensor atacante) (defender atacante)
+                        
